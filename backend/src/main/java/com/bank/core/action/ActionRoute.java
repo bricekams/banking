@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//todo: implement methods ActionRoute
 @RestController
 @RequestMapping("api/v1/actions")
 public class ActionRoute {

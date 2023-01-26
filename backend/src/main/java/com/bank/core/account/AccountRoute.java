@@ -36,13 +36,10 @@ public class AccountRoute {
             @RequestParam(required = false, value = "creationDate") String creationDate,
             @RequestParam(required = false, value = "createdBefore") String createdBefore,
             @RequestParam(required = false, value = "createdAfter") String createdAfter,
-            @RequestParam(required = false, value = "branchId") Long branchId,
             @RequestParam(required = false, value = "ownerId") Long ownerId,
-            @RequestParam(required = false, value = "actionsNumberMoreThan") Long actionsNumberMoreThan,
-            @RequestParam(required = false, value = "actionsNumberLessThan") Long actionsNumberLessThan,
             HttpServletRequest httpServletRequest
     ) {
-        return new AccountController(customerRepository,accountRepository).getAccounts(creationYear,creationMonth,creationDay,creationDate,createdBefore,createdAfter,branchId,ownerId,actionsNumberMoreThan,actionsNumberLessThan,httpServletRequest);
+        return new AccountController(customerRepository,accountRepository).getAccounts(creationYear,creationMonth,creationDay,creationDate,createdBefore,createdAfter,ownerId,httpServletRequest);
     }
 
     @PostMapping

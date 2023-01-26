@@ -3,9 +3,9 @@ services:
     container_name: postgres
     image: postgres
     environment:
-      POSTGRES_USER: jotterkain
-      POSTGRES_PASSWORD: password
-      PGDATA: /data/postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGDATA=/data/postgres
     volumes:
       - db:/data/postgres
     ports:
@@ -13,6 +13,12 @@ services:
     networks:
       - db
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    command: /bin/bash -c "until pg_isready -U ${POSTGRES_USER} ; do sleep 1; done; psql -U ${POSTGRES_USER} -d postgres -c 'CREATE DATABASE bank;'"
 networks:
   db:
     driver: bridge

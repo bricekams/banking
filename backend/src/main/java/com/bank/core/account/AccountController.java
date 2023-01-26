@@ -31,45 +31,40 @@ public class AccountController {
             String creationDate,
             String before,
             String after,
-            Long branchId,
             Long ownerId,
-            Long numberOfActionsMoreThan,
-            Long numberOfActionsLessThan,
             HttpServletRequest httpServletRequest) {
         if (httpServletRequest.getParameterMap().values().toArray().length < 1) {
             //no params
             return accountRepository.findAll();
         }
-        Customer owner = customerRepository.findById(ownerId==null?0:ownerId).orElse(null);
+        Customer owner = customerRepository.findById(ownerId == null ? 0 : ownerId).orElse(null);
         Specification<Account> specification = Specification
-                .where(creationYear == null?null:creationYearEqual(creationYear))
-                .and(creationMonth== null?null:creationMonthEqual(creationMonth))
-                .and(creationDay== null?null:creationDayEqual(creationDay))
-                .and(creationDate== null?null:creationDateEqual(creationDate))
-                .and(before== null?null:creationDateBefore(before))
-                .and(after== null?null:creationDateAfter(after))
-                .and(ownerId== null?null: accountOwnerId(owner))
-                .and(numberOfActionsMoreThan == null?null: numberOfActionsMoreThan(numberOfActionsMoreThan))
-                .and(numberOfActionsLessThan == null? null : numberOfActionsLessThan(numberOfActionsLessThan));
+                .where(creationYear == null ? null : creationYearEqual(creationYear))
+                .and(creationMonth == null ? null : creationMonthEqual(creationMonth))
+                .and(creationDay == null ? null : creationDayEqual(creationDay))
+                .and(creationDate == null ? null : creationDateEqual(creationDate))
+                .and(before == null ? null : creationDateBefore(before))
+                .and(after == null ? null : creationDateAfter(after))
+                .and(ownerId == null ? null : accountOwnerId(owner));
 
         return accountRepository.findAll(specification);
     }
 
-    public void createAccount(NewAccountRecord newAccountRecord){
+    public void createAccount(NewAccountRecord newAccountRecord) {
         Account account = new Account();
-        customerRepository.findById(newAccountRecord.ownerId()).ifPresentOrElse(owner->{
-                account.setOwner(owner);
-                account.setAccountName(newAccountRecord.accountName());
-                account.setAccountNumber(new Random().nextLong()); //todo: you'll definitely have to work on this
-                account.setCreatedOn(OffsetDateTime.now());
-                account.setBalance(0F);
-                this.accountRepository.save(account);
-        },()->{
-            throw  new ResponseStatusException(HttpStatus.NOT_FOUND, "Owner does not exist");
+        customerRepository.findById(newAccountRecord.ownerId()).ifPresentOrElse(owner -> {
+            account.setOwner(owner);
+            account.setAccountName(newAccountRecord.accountName());
+            account.setAccountNumber(new Random().nextLong()); //todo: you'll definitely have to work on this
+            account.setCreatedOn(OffsetDateTime.now());
+            account.setBalance(0F);
+            this.accountRepository.save(account);
+        }, () -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Owner does not exist");
         });
     }
 
-    public void updateAccount(Long accountNumber, HashMap<String, Object> data){
+    public void updateAccount(Long accountNumber, HashMap<String, Object> data) {
         Optional<Account> customer = accountRepository.findById(accountNumber);
         customer.ifPresentOrElse(e -> {
             for (Map.Entry<String, Object> entry : data.entrySet()) {
@@ -83,8 +78,8 @@ public class AccountController {
                 }
             }
             accountRepository.save(e);
-        },()->{
-            throw  new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist");
+        }, () -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist");
         });
     }
 }

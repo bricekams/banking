@@ -1,9 +1,6 @@
 package com.bank.core.action;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.bank.core.account.Account;
 import com.bank.core.action.utils.ActionType;
 import jakarta.persistence.*;
-
 import java.util.Objects;
 
 
@@ -26,11 +23,13 @@ public class Action {
     private ActionType actionType;
     private String receiverName;
     private String receiverReference;
+    private String purpose;
 
-    public Action(Long actionId, Long eventfulAccount, ActionType actionType, Float amoun, String receiverName, String receiverReference) {
+    public Action(Long actionId, Long eventfulAccount, ActionType actionType, Float amount, String receiverName, String receiverReference, String purpose) {
         this.actionId = actionId;
         this.eventfulAccount = eventfulAccount;
         this.actionType = actionType;
+        this.purpose = purpose;
         this.amount = amount;
         this.receiverName = receiverName;
         this.receiverReference = receiverReference;
@@ -87,16 +86,37 @@ public class Action {
         this.receiverReference = receiverReference;
     }
 
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Action action = (Action) o;
-        return actionId.equals(action.actionId) && eventfulAccount.equals(action.eventfulAccount) && amount.equals(action.amount) && actionType == action.actionType && receiverName.equals(action.receiverName) && receiverReference.equals(action.receiverReference);
+        return actionId.equals(action.actionId) && eventfulAccount.equals(action.eventfulAccount) && amount.equals(action.amount) && actionType == action.actionType && receiverName.equals(action.receiverName) && receiverReference.equals(action.receiverReference) && purpose.equals(action.purpose);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(actionId, eventfulAccount, amount, actionType, receiverName, receiverReference);
+        return Objects.hash(actionId, eventfulAccount, amount, actionType, receiverName, receiverReference, purpose);
+    }
+
+    @Override
+    public String toString() {
+        return "Action{" +
+                "actionId=" + actionId +
+                ", eventfulAccount=" + eventfulAccount +
+                ", amount=" + amount +
+                ", actionType=" + actionType +
+                ", receiverName='" + receiverName + '\'' +
+                ", receiverReference='" + receiverReference + '\'' +
+                ", purpose='" + purpose + '\'' +
+                '}';
     }
 }

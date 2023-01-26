@@ -55,25 +55,25 @@ public class AccountSpecification {
         return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.<OffsetDateTime>get("createdOn"), value));
     }
 
-    public static Specification<Account> numberOfActionsMoreThan(Long value) {
-        return ((root, query, criteriaBuilder) -> {
-            Join<Action, Account> actionAccountJoin = root.join("actionsList", JoinType.LEFT);
-            query.having(criteriaBuilder.lessThan(criteriaBuilder.count(actionAccountJoin), value));
-            query.groupBy(root);
-            return criteriaBuilder.and();
-        });
-    }
-
-    public static Specification<Account> numberOfActionsLessThan(Long value) {
-        return ((root, query, criteriaBuilder) -> {
-            Subquery<Long> subquery = query.subquery(Long.class);
-            Root<Action> accountRoot = subquery.from(Action.class);
-            subquery.select(accountRoot.get("eventfulAccount").get("accountNumber"));
-            subquery.groupBy(accountRoot.get("eventfulAccount"));
-            subquery.having(criteriaBuilder.greaterThan(criteriaBuilder.count(accountRoot), value));
-            return criteriaBuilder.in(root.get("accountNumber")).value(subquery);
-        });
-    }
+//    public static Specification<Account> numberOfActionsMoreThan(Long value) {
+//        return ((root, query, criteriaBuilder) -> {
+//            Join<Action, Account> actionAccountJoin = root.join("actionsList", JoinType.LEFT);
+//            query.having(criteriaBuilder.lessThan(criteriaBuilder.count(actionAccountJoin), value));
+//            query.groupBy(root);
+//            return criteriaBuilder.and();
+//        });
+//    }
+//
+//    public static Specification<Account> numberOfActionsLessThan(Long value) {
+//        return ((root, query, criteriaBuilder) -> {
+//            Subquery<Long> subquery = query.subquery(Long.class);
+//            Root<Action> accountRoot = subquery.from(Action.class);
+//            subquery.select(accountRoot.get("eventfulAccount").get("accountNumber"));
+//            subquery.groupBy(accountRoot.get("eventfulAccount"));
+//            subquery.having(criteriaBuilder.greaterThan(criteriaBuilder.count(accountRoot), value));
+//            return criteriaBuilder.in(root.get("accountNumber")).value(subquery);
+//        });
+//    }
 
     //todo: to implements
     public static Specification<Account> creationMonthEqual(Integer value) {

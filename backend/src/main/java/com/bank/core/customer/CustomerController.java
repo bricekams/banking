@@ -62,6 +62,7 @@ public class CustomerController {
         customer.setNicId(newCusomerRecord.nicId());
         customer.setEmail(Helpers.checkAndReturnEmail(newCusomerRecord.email()));
         customer.setPhoneNumber(newCusomerRecord.phoneNumber());
+        customer.setProfilePicture(newCusomerRecord.profilePicture());
         customer.setHasActiveAccount(false);
         try {
             customerRepository.save(customer);

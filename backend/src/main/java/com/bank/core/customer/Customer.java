@@ -30,17 +30,20 @@ public class Customer {
     private Long phoneNumber;
     @Column(unique = true)
     private String email;
+    private String profilePicture;
     private Boolean hasActiveAccount;
 
-    public Customer(Long customerId, String firstName, String lastName, LocalDate birthDate, String cityOfBirth, String nic_id, Long phoneNumber, String email, Boolean hasActiveAccount) {
+
+    public Customer(Long customerId, String firstName, String lastName, LocalDate birthDate, String cityOfBirth, String nicId, Long phoneNumber, String email, String profilePicture, Boolean hasActiveAccount) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
         this.cityOfBirth = cityOfBirth;
-        this.nicId = nic_id;
+        this.nicId = nicId;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.profilePicture = profilePicture;
         this.hasActiveAccount = hasActiveAccount;
     }
 
@@ -91,8 +94,8 @@ public class Customer {
         return nicId;
     }
 
-    public void setNicId(String nic_id) {
-        this.nicId = nic_id;
+    public void setNicId(String nicId) {
+        this.nicId = nicId;
     }
 
     public Long getPhoneNumber() {
@@ -111,6 +114,14 @@ public class Customer {
         this.email = email;
     }
 
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
     public Boolean getHasActiveAccount() {
         return hasActiveAccount;
     }
@@ -124,12 +135,12 @@ public class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return Objects.equals(firstName, customer.firstName) && lastName.equals(customer.lastName) && birthDate.equals(customer.birthDate) && cityOfBirth.equals(customer.cityOfBirth) && nicId.equals(customer.nicId) && phoneNumber.equals(customer.phoneNumber) && email.equals(customer.email);
+        return customerId.equals(customer.customerId) && firstName.equals(customer.firstName) && lastName.equals(customer.lastName) && birthDate.equals(customer.birthDate) && cityOfBirth.equals(customer.cityOfBirth) && nicId.equals(customer.nicId) && phoneNumber.equals(customer.phoneNumber) && email.equals(customer.email) && profilePicture.equals(customer.profilePicture) && hasActiveAccount.equals(customer.hasActiveAccount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, birthDate, cityOfBirth, nicId, phoneNumber, email);
+        return Objects.hash(customerId, firstName, lastName, birthDate, cityOfBirth, nicId, phoneNumber, email, profilePicture, hasActiveAccount);
     }
 }
 

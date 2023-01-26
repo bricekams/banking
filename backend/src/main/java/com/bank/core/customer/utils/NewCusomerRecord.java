@@ -8,6 +8,7 @@ public record NewCusomerRecord(
         String cityOfBirth,
         String nicId, // national identity card number
         Long phoneNumber,
-        String email
+        String email,
+        String profilePicture
 ) {
 }
