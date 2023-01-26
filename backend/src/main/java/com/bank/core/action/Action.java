@@ -1,22 +1,17 @@
 package com.bank.core.action;
 import com.bank.core.action.utils.ActionType;
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+
 import java.util.Objects;
 
 
 @Entity(name = "action")
 public class Action {
     @Id
-    @SequenceGenerator(
-            name = "action_id_sequence",
-            sequenceName = "action_id_sequence",
-            allocationSize = 33
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "action_id_sequence"
-    )
-    private Long actionId;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String actionId;
     private Long eventfulAccount;
     private Float amount;
     @Enumerated(EnumType.STRING)
@@ -25,7 +20,7 @@ public class Action {
     private String receiverReference;
     private String purpose;
 
-    public Action(Long actionId, Long eventfulAccount, ActionType actionType, Float amount, String receiverName, String receiverReference, String purpose) {
+    public Action(String actionId, Long eventfulAccount, ActionType actionType, Float amount, String receiverName, String receiverReference, String purpose) {
         this.actionId = actionId;
         this.eventfulAccount = eventfulAccount;
         this.actionType = actionType;
@@ -38,11 +33,11 @@ public class Action {
     public Action() {
     }
 
-    public Long getActionId() {
+    public String getActionId() {
         return actionId;
     }
 
-    public void setActionId(Long actionId) {
+    public void setActionId(String actionId) {
         this.actionId = actionId;
     }
 

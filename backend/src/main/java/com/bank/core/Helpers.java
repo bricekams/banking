@@ -5,6 +5,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 public class Helpers {
@@ -27,5 +28,14 @@ public class Helpers {
             System.out.println("Invalid email format");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email format");
         }
+    }
+
+    public static Long generateFakeAccountNumber() {
+        Random rand = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            sb.append(rand.nextInt(10));
+        }
+        return Long.parseLong(sb.toString());
     }
 }

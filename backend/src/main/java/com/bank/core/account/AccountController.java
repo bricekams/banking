@@ -1,6 +1,7 @@
 package com.bank.core.account;
 
 
+import com.bank.core.Helpers;
 import com.bank.core.account.utils.NewAccountRecord;
 import com.bank.core.customer.Customer;
 import com.bank.core.customer.CustomerRepository;
@@ -31,13 +32,15 @@ public class AccountController {
             String creationDate,
             String before,
             String after,
-            Long ownerId,
+            String ownerId,
             HttpServletRequest httpServletRequest) {
         if (httpServletRequest.getParameterMap().values().toArray().length < 1) {
             //no params
             return accountRepository.findAll();
         }
-        Customer owner = customerRepository.findById(ownerId == null ? 0 : ownerId).orElse(null);
+        Customer owner = ownerId == null? null : customerRepository.findById(ownerId).orElseThrow(()-> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "customer does not exist");
+        });
         Specification<Account> specification = Specification
                 .where(creationYear == null ? null : creationYearEqual(creationYear))
                 .and(creationMonth == null ? null : creationMonthEqual(creationMonth))
@@ -55,7 +58,7 @@ public class AccountController {
         customerRepository.findById(newAccountRecord.ownerId()).ifPresentOrElse(owner -> {
             account.setOwner(owner);
             account.setAccountName(newAccountRecord.accountName());
-            account.setAccountNumber(new Random().nextLong()); //todo: you'll definitely have to work on this
+            account.setAccountNumber(Helpers.generateFakeAccountNumber()); //todo: you'll definitely have to work on this
             account.setCreatedOn(OffsetDateTime.now());
             account.setBalance(0F);
             this.accountRepository.save(account);

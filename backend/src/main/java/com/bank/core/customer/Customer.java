@@ -2,6 +2,7 @@ package com.bank.core.customer;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
 
@@ -10,16 +11,9 @@ import java.util.Objects;
 @Entity(name = "customers")
 public class Customer {
     @Id
-    @SequenceGenerator(
-            name = "customer_id_sequence",
-            sequenceName = "customer_id_sequence",
-            allocationSize = 33
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "customer_id_sequence"
-    )
-    private Long customerId;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String customerId;
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
@@ -34,7 +28,7 @@ public class Customer {
     private Boolean hasActiveAccount;
 
 
-    public Customer(Long customerId, String firstName, String lastName, LocalDate birthDate, String cityOfBirth, String nicId, Long phoneNumber, String email, String profilePicture, Boolean hasActiveAccount) {
+    public Customer(String customerId, String firstName, String lastName, LocalDate birthDate, String cityOfBirth, String nicId, Long phoneNumber, String email, String profilePicture, Boolean hasActiveAccount) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -50,11 +44,11 @@ public class Customer {
     public Customer() {
     }
 
-    public Long getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Long customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 

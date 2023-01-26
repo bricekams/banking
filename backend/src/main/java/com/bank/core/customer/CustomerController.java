@@ -71,7 +71,7 @@ public class CustomerController {
         }
     }
 
-    public void updateCustomerData(Long customerId, HashMap<String, Object> data) {
+    public void updateCustomerData(String customerId, HashMap<String, Object> data) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         customer.ifPresentOrElse(e -> {
             for (Map.Entry<String, Object> entry : data.entrySet()) {

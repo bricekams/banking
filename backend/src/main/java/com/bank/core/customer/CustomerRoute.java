@@ -55,17 +55,17 @@ public class CustomerRoute {
     }
 
     @GetMapping("{customerId}")
-    public Customer getCostumerByID(@PathVariable("customerId") Long customerId) {
+    public Customer getCostumerByID(@PathVariable("customerId") String customerId) {
         return customerRepository.findById(customerId).orElse(null);
     }
 
     @PutMapping("{customerId}")
-    public void updateCustomerData(@PathVariable("customerId") Long customerId, @RequestBody HashMap<String, Object> data) {
+    public void updateCustomerData(@PathVariable("customerId") String customerId, @RequestBody HashMap<String, Object> data) {
         new CustomerController(customerRepository).updateCustomerData(customerId, data);
     }
 
     @GetMapping("{customerId}/accounts")
-    public List<Account> getCustomerAccounts(@PathVariable("customerId") Long customerId){
+    public List<Account> getCustomerAccounts(@PathVariable("customerId") String customerId){
         return accountRepository.findByOwner(customerRepository.findById(customerId).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Owner does not exist in database")));
     }
 
