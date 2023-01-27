@@ -7,7 +7,8 @@ public record NewActionRecord(
         String actionType,
         Float amount,
         String receiverName,
-        String receiverReference
+        String receiverReference,
+        String purpose
 
 ) {
 }

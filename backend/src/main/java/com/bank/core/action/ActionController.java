@@ -69,22 +69,50 @@ public class ActionController {
 
         action.setAmount(amount);
         action.setActionType(actionType);
+
         switch (newActionRecord.actionType().toUpperCase()) {
             case "DEPOSIT" -> {
-                action.setReceiverName(null);
-                action.setReceiverReference(eventfulAccount.getAccountNumber().toString()); // should be IBAN
+                action.setReceiverName(eventfulAccount.getOwner().getFirstName()+" "+eventfulAccount.getOwner().getLastName());
+                action.setReceiverReference(eventfulAccount.getAccountNumber().toString());
+                actionRepository.save(action);
+                eventfulAccount.setBalance(eventfulAccount.getBalance()+amount);
+                accountRepository.save(eventfulAccount);
             }
             case "TRANSFER" -> {
-                action.setReceiverName(newActionRecord.receiverName());
+                if (eventfulAccount.getBalance()<amount){
+                    throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "NOT enough found");
+                }
+                long reference;
+                try{
+                    reference = Long.parseLong(newActionRecord.receiverReference());
+                } catch (Exception e){
+                    System.out.println(e.toString());
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Reference Bad Format");
+                }
+                if(eventfulAccount.getAccountNumber().compareTo(reference)==0){
+                    throw new ResponseStatusException(HttpStatus.CONFLICT,"Sender equal Receiver");
+                }
+                Account receiverAccount = accountRepository.findById(reference).orElseThrow(()-> {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist");
+                });
+                action.setPurpose(newActionRecord.purpose());
+                action.setReceiverName(receiverAccount.getOwner().getFirstName()+" "+receiverAccount.getOwner().getLastName());
                 action.setReceiverReference(newActionRecord.receiverReference()); // account number
+                actionRepository.save(action);
+                eventfulAccount.setBalance(eventfulAccount.getBalance()-amount);
+                receiverAccount.setBalance(receiverAccount.getBalance()+amount);
+                accountRepository.saveAll(List.of(eventfulAccount,receiverAccount));
             }
             case "WITHDRAW" -> {
+                if (eventfulAccount.getBalance()<amount){
+                    throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "NOT enough found");
+                }
+                action.setPurpose(newActionRecord.purpose());
                 action.setReceiverReference(newActionRecord.receiverReference()); // should be IBAN;
                 action.setReceiverName(newActionRecord.receiverName());
             }
             default -> {
             }
         }
-        actionRepository.save(action);
     }
 }

@@ -1,13 +1,10 @@
 package com.bank.core.account;
 
 import com.bank.core.account.utils.NewAccountRecord;
-import com.bank.core.action.Action;
 import com.bank.core.action.ActionRepository;
 import com.bank.core.customer.CustomerRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -56,14 +53,4 @@ public class AccountRoute {
     public void updateAccount(@PathVariable("accountNumber") Long accountNumber, HashMap<String, Object> data){
         new AccountController(customerRepository,accountRepository).updateAccount(accountNumber,data);
     }
-    @GetMapping("/{accountNumber}/actions")
-    public List<Action> getAccountActions(@PathVariable("accountNumber") Long accountNumber) {
-        return actionRepository.findByEventfulAccount(accountRepository.findById(accountNumber).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Account does not exist")));
-    }
-
-    @GetMapping("/{accountNumber}/action/{actionId}")
-    public Action getActionInAccountById(@PathVariable("actionId") Long actionId) {
-        return actionRepository.findById(actionId).orElse(null);
-    }
-
 }
