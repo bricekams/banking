@@ -1,4 +1,4 @@
 FROM openjdk:17
-ADD target/backend.jar backend.jar
-ENTRYPOINT ["java", "-jar","backend.jar"]
+ADD target/api-0.1.jar api.jar
+ENTRYPOINT ["java", "-jar","api.jar"]
 EXPOSE 8080

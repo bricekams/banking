@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.iai</groupId>
-	<artifactId>bank-system</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>api</artifactId>
+	<version>0.1</version>
 	<name>bank-system</name>
 	<description>A school project</description>
 	<properties>
