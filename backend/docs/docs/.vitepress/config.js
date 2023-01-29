@@ -5,6 +5,7 @@ export default {
     siteTitle: 'Banking System',
     lastUpdated: true,
     themeConfig: {
+        base: "/banking/api/",
         footer: {
             message: 'Released under the MIT License.',
             copyright: 'Copyright © 2023-present Jotter Kain'
