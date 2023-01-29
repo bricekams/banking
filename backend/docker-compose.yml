@@ -1,7 +1,7 @@
 services:
   backend:
     container_name: "backend"
-    image: 'backend.jar'
+    image: 'finance_backend.jar'
     ports:
       - "8080:8080"
     depends_on:

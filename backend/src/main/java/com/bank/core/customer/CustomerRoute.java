@@ -16,13 +16,9 @@ public class CustomerRoute {
 
     private final CustomerRepository customerRepository;
 
-
-
-
     public CustomerRoute(CustomerRepository customerRepository
                          ) {
         this.customerRepository = customerRepository;
-
     }
 
     @GetMapping
