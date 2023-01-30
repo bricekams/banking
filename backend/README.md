@@ -1,6 +1,6 @@
 # The backend of the project, written in spring boot.
 
-[Official Documentation link](https://bankingapi.netlify.app/)
+[Official documentation link](https://bankingapi.netlify.app/)
 
 ## How to run it ?
 

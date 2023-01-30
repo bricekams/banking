@@ -9,7 +9,6 @@ This endpoint is the one to use when it comes to customers data.
 ::: details Body request format
 ```json
 {
-  "customerId": 3355665214,
   "firstName": "John",
   "lastName": "Doe",
   "birthDate": "1972-10-08",
@@ -17,7 +16,9 @@ This endpoint is the one to use when it comes to customers data.
   "nicId": "12345DK", # nationcal card ID
   "phoneNumber": 696693256, # without country code
   "email": "johndoe@gmail.com",
-  "profilePicture": "https://aFakeLinkToAnImg.com"
+  "profilePicture": "https://aFakeLinkToAnImg.com",
+  "password": "dbfsdyuifgudfhgidfghdfi",
+  "pin": "invdfoisnhfuihfisdhfsdui"
 }
 ```
 :::
@@ -50,7 +51,9 @@ hasActiveAccount: Fetch all customers with active account
         "phoneNumber": 658545207,
         "email": "johndoe@gmail.com",
         "profilePicture": null,
-        "hasActiveAccount": false
+        "hasActiveAccount": false,
+        "password": "sdhfuisdhgfidhgiu",
+        "pin": "nsdjkfuieygh"
     },
     {
         "customerId": "7946b255-54aa-48a1-b174-05082201f3bd",
@@ -62,7 +65,9 @@ hasActiveAccount: Fetch all customers with active account
         "phoneNumber": 658456999,
         "email": "mariadoe@gmail.com",
         "profilePicture": null,
-        "hasActiveAccount": false
+        "hasActiveAccount": false,
+        "password": "sdhfuisdhgfidhgiu",
+        "pin": "nsdjkfuieygh"
     }
 ]
 ```
@@ -94,7 +99,9 @@ Only the customer email and phone number will be updated
   "phoneNumber": 658456999,
   "email": "mariadoe@gmail.com",
   "profilePicture": null,
-  "hasActiveAccount": false
+  "hasActiveAccount": false,
+  "password": "sdhfuisdhgfidhgiu",
+  "pin": "nsdjkfuieygh"
 }
 ```
 :::

@@ -26,6 +26,8 @@ public class Customer {
     private String email;
     private String profilePicture;
     private Boolean hasActiveAccount;
+    private String password;
+    private String pin;
 
 
     public Customer(String customerId, String firstName, String lastName, LocalDate birthDate, String cityOfBirth, String nicId, Long phoneNumber, String email, String profilePicture, Boolean hasActiveAccount) {
@@ -124,17 +126,51 @@ public class Customer {
         this.hasActiveAccount = hasActiveAccount;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return customerId.equals(customer.customerId) && firstName.equals(customer.firstName) && lastName.equals(customer.lastName) && birthDate.equals(customer.birthDate) && cityOfBirth.equals(customer.cityOfBirth) && nicId.equals(customer.nicId) && phoneNumber.equals(customer.phoneNumber) && email.equals(customer.email) && profilePicture.equals(customer.profilePicture) && hasActiveAccount.equals(customer.hasActiveAccount);
+        return customerId.equals(customer.customerId) && firstName.equals(customer.firstName) && lastName.equals(customer.lastName) && birthDate.equals(customer.birthDate) && cityOfBirth.equals(customer.cityOfBirth) && nicId.equals(customer.nicId) && phoneNumber.equals(customer.phoneNumber) && email.equals(customer.email) && profilePicture.equals(customer.profilePicture) && hasActiveAccount.equals(customer.hasActiveAccount) && password.equals(customer.password) && pin.equals(customer.pin);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(customerId, firstName, lastName, birthDate, cityOfBirth, nicId, phoneNumber, email, profilePicture, hasActiveAccount);
+        return Objects.hash(customerId, firstName, lastName, birthDate, cityOfBirth, nicId, phoneNumber, email, profilePicture, hasActiveAccount, password, pin);
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId='" + customerId + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate=" + birthDate +
+                ", cityOfBirth='" + cityOfBirth + '\'' +
+                ", nicId='" + nicId + '\'' +
+                ", phoneNumber=" + phoneNumber +
+                ", email='" + email + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", hasActiveAccount=" + hasActiveAccount +
+                ", password='" + password + '\'' +
+                ", pin='" + pin + '\'' +
+                '}';
     }
 }
 
