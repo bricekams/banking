@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/ui/screens/auth/login.dart';
 import 'package:mobile/ui/theme/theme.dart';
 import 'package:mobile/utils/locale/locale.dart' as local;
 import 'package:mobile/utils/routes/routes.dart';

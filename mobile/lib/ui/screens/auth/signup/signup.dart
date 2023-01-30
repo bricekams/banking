@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,7 +21,11 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final PageController _pageController = PageController();
   int currentIndex = 0;
+  bool verifyingOTP = false;
+  bool otpAllFields = true;
+  bool submitted = false;
 
+  late int phoneNumber = int.parse(phoneNumberController.text);
   @override
   void initState() {
     super.initState();
@@ -109,6 +114,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Expanded(
                 flex: 10,
                 child: PageView(
+                  physics: const NeverScrollableScrollPhysics(),
                   controller: _pageController,
                   children: const [
                     FirstView(),
@@ -131,9 +137,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 15),
                           onPressed: () {
-                            _pageController.jumpToPage(currentIndex-1);
+                            switch (currentIndex){
+                              case 3:
+                                _pageController.animateToPage(currentIndex - 2,
+                                    duration: const Duration(milliseconds: 400),
+                                    curve: Curves.easeIn);
+                                break;
+                              default:
+                                _pageController.animateToPage(currentIndex - 1,
+                                    duration: const Duration(milliseconds: 400),
+                                    curve: Curves.easeIn);
+                                break;
+                            }
                           },
-                          child: const Text("Back"),
+                          child: Text(currentIndex == 2 ? "Cancel" : "Back"),
                         )
                       : TextButton(
                           onPressed: () {
@@ -152,14 +169,72 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     textTheme: ButtonTextTheme.primary,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 15),
-                    onPressed: () {
-                      if(currentIndex==0){
-                        if(formKeyFirstView1.currentState!.validate()){
-                          _pageController.jumpToPage(currentIndex+1);
-                        }
+                    onPressed: otpAllFields==false ? null : () {
+                      switch (currentIndex) {
+                        case 0:
+                          if (formKeyFirstView.currentState!.validate()) {
+                            _pageController.animateToPage(currentIndex + 1,
+                                duration: const Duration(milliseconds: 400),
+                                curve: Curves.easeIn);
+                          }
+                          break;
+                        case 1:
+                          if (formKeySecondView.currentState!.validate()) {
+                            phoneNumber = int.parse(phoneNumberController.text);
+                            FirebaseAuth auth = FirebaseAuth.instance;
+                            auth.verifyPhoneNumber(
+                              phoneNumber: "+237$phoneNumber",
+                              codeSent: (String verificationId, int? resendToken) async {
+                                log("code sent");
+                                _pageController.jumpToPage(2);
+                                do{
+
+                                } while (submitted==false);
+
+                                String otpSMS = "${otpInputController_1.text}${otpInputController_2.text}${otpInputController_3.text}${otpInputController_4.text}";
+                                PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: otpSMS);
+                                auth.signInWithCredential(credential).then((value){
+                                  verifyingOTP = false;
+                                  setState(() {
+
+                                  });
+                                  if(value.user!=null){
+                                    _pageController.animateToPage(currentIndex + 1,
+                                        duration: const Duration(milliseconds: 400),
+                                        curve: Curves.easeIn);
+                                  }
+                                });
+                              },
+                              verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {  },
+                              verificationFailed: (FirebaseAuthException error) {
+                                log("${error.code}: ${error.message ?? ""}");
+                              },
+                              codeAutoRetrievalTimeout: (String verificationId) {  },
+                            );
+                          }
+                          break;
+                        case 2:
+                          if (formKeyThirdView.currentState!.validate()) {
+                            submitted = true;
+                            verifyingOTP = true;
+                            setState(() {
+
+                            });
+                          }
+                          break;
+                        default:
+                          break;
                       }
                     },
-                    child: const Text("Next"),
+                    child: verifyingOTP
+                        ? SizedBox(
+                            height: 14,
+                            width: 14,
+                            child: CircularProgressIndicator(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          )
+                        : Text(currentIndex == 2 ? "Verify" : "Next"),
                   )
                 ],
               )

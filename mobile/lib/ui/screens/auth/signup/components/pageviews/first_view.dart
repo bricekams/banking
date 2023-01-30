@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/ui/widgets/custom_field.dart';
 
-GlobalKey<FormState> formKeyFirstView1 = GlobalKey<FormState>();
+GlobalKey<FormState> formKeyFirstView = GlobalKey<FormState>();
+
 class FirstView extends StatelessWidget {
   const FirstView({Key? key}) : super(key: key);
 
@@ -15,7 +16,7 @@ class FirstView extends StatelessWidget {
     String date = "";
     String label = "Birth Date";
     return Form(
-      key: formKeyFirstView1,
+      key: formKeyFirstView,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

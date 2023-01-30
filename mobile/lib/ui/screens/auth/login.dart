@@ -41,7 +41,7 @@ class LoginScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "\$OLV",
+                        "\$ENDEN",
                         style: GoogleFonts.abrilFatface(fontSize: 40),
                       ),
                       const SizedBox(width: 10),
