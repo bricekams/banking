@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "477143305789",
+    "project_id": "banking-app-jotter",
+    "storage_bucket": "banking-app-jotter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:477143305789:android:e1d027e2361196e731a454",
+        "android_client_info": {
+          "package_name": "com.example.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "477143305789-d0vg6r890bnoa1ok8gdttjesmvhhjpvd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCSkLYnNWPWaIscUrWVNrBgyrieOKpA2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "477143305789-d0vg6r890bnoa1ok8gdttjesmvhhjpvd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
