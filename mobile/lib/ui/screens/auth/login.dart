@@ -41,7 +41,7 @@ class LoginScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "MAP\$",
+                        "\$OLV",
                         style: GoogleFonts.abrilFatface(fontSize: 40),
                       ),
                       const SizedBox(width: 10),
@@ -116,7 +116,7 @@ class LoginScreen extends StatelessWidget {
                           TextSpan(
                               text: "register.",
                               recognizer: TapGestureRecognizer()..onTap = () {
-                                context.pushNamed(RouteConstants.signup);
+                                context.pop();
                               },
                               style: const TextStyle(
                                   color: Colors.cyan,

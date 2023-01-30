@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class CustomField extends StatelessWidget {
@@ -5,38 +7,52 @@ class CustomField extends StatelessWidget {
   final Widget? prefixIcon;
   final String? hintText;
   final Widget? label;
-  const CustomField({Key? key, this.suffixIcon, this.prefixIcon, this.hintText,this.label}) : super(key: key);
+  final bool? readOnly;
+  final String? initialValue;
+  final TextEditingController controller;
+  final void Function()? onTap;
+  final void Function(PointerDownEvent pointerDownEvent)? onTapOutside;
+  final String? Function(String?)? validator;
+  final TextInputAction? textInputAction;
+  final void Function(String)? onFieldSubmitted;
+
+  const CustomField(
+      {Key? key,
+      this.suffixIcon,
+      this.prefixIcon,
+      this.hintText,
+      this.label,
+      this.readOnly,
+      required this.controller,
+      this.initialValue,
+      this.onTap,
+      this.onTapOutside,
+      this.validator,
+      this.textInputAction,
+      this.onFieldSubmitted})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onTap: onTap,
+      validator: validator,
+      onTapOutside: onTapOutside,
+      initialValue: initialValue,
+      textInputAction: textInputAction,
+      onFieldSubmitted: onFieldSubmitted,
+      readOnly: readOnly ?? false,
       style: const TextStyle(
         fontWeight: FontWeight.w500,
       ),
       decoration: InputDecoration(
         label: label,
         hintText: hintText,
-        hintStyle:  const TextStyle(
+        hintStyle: const TextStyle(
           fontWeight: FontWeight.w500,
         ),
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
-        focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(width: 2),
-            borderRadius: BorderRadius.circular(5)),
-        enabledBorder: OutlineInputBorder(
-          borderSide:
-          BorderSide(width: 2, color: Colors.grey.shade600),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 2,color: Theme.of(context).colorScheme.error),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 2,color: Theme.of(context).colorScheme.error),
-          borderRadius: BorderRadius.circular(5),
-        ),
       ),
     );
   }

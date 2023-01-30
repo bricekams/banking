@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -54,7 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "MAP\$",
+                        "\$ENDEN",
                         style: GoogleFonts.abrilFatface(fontSize: 40),
                       ),
                       const SizedBox(width: 10),
@@ -66,7 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   Text(
                     "Create account",
                     style: GoogleFonts.alata(
@@ -103,9 +105,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               Expanded(
-                flex: 4,
+                flex: 10,
                 child: PageView(
                   controller: _pageController,
                   children: const [
@@ -128,7 +130,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           textTheme: ButtonTextTheme.primary,
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 15),
-                          onPressed: () {},
+                          onPressed: () {
+                            _pageController.jumpToPage(currentIndex-1);
+                          },
                           child: const Text("Back"),
                         )
                       : TextButton(
@@ -148,7 +152,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     textTheme: ButtonTextTheme.primary,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 15),
-                    onPressed: () {},
+                    onPressed: () {
+                      if(currentIndex==0){
+                        if(formKeyFirstView1.currentState!.validate()){
+                          _pageController.jumpToPage(currentIndex+1);
+                        }
+                      }
+                    },
                     child: const Text("Next"),
                   )
                 ],
