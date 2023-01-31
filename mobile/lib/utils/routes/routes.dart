@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile/ui/screens/auth/login.dart';
+import 'package:mobile/ui/screens/auth/login/login.dart';
+import 'package:mobile/ui/screens/auth/recover_password/recover_password.dart';
 import 'package:mobile/ui/screens/auth/signup/signup.dart';
 import 'package:mobile/utils/routes/route_const.dart';
 import '../../ui/screens/home/home.dart';
@@ -23,15 +24,23 @@ class AppRouter {
         },
       ),
       GoRoute(
-          path: "/login",
-          name: RouteConstants.login,
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: LoginScreen())),
+        path: "/login",
+        name: RouteConstants.login,
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: LoginScreen()),
+      ),
       GoRoute(
-          path: "/signup",
-          name: RouteConstants.signup,
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: SignUpScreen())),
+        path: "/signup",
+        name: RouteConstants.signup,
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: SignUpScreen()),
+      ),
+      GoRoute(
+        path: "/recover",
+        name: RouteConstants.recover,
+        pageBuilder: (context, state) =>
+        const MaterialPage(child: RecoverPassWordScreen()),
+      ),
     ],
   );
 }

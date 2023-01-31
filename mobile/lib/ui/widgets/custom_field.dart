@@ -15,6 +15,7 @@ class CustomField extends StatelessWidget {
   final String? Function(String?)? validator;
   final TextInputAction? textInputAction;
   final void Function(String)? onFieldSubmitted;
+  final bool? obscureText;
 
   const CustomField(
       {Key? key,
@@ -29,7 +30,7 @@ class CustomField extends StatelessWidget {
       this.onTapOutside,
       this.validator,
       this.textInputAction,
-      this.onFieldSubmitted})
+      this.onFieldSubmitted, this.obscureText})
       : super(key: key);
 
   @override
@@ -42,6 +43,7 @@ class CustomField extends StatelessWidget {
       textInputAction: textInputAction,
       onFieldSubmitted: onFieldSubmitted,
       readOnly: readOnly ?? false,
+      obscureText: obscureText??false,
       style: const TextStyle(
         fontWeight: FontWeight.w500,
       ),
