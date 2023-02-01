@@ -22,13 +22,11 @@ public class CustomerController {
     }
 
     // This function return an array of users. The result can be tuned/filtered depending on the query parameters in the url
-    public List<Customer> getAllCustomers(String firstName,
+    public List<Customer> getAllCustomers(String customerId,
+                                            String firstName,
                                           String lastName,
                                           String birthDate,
-                                          String cityOfBirth,
                                           String nicId,
-                                          String email,
-                                          Integer phoneNumber,
                                           Boolean hasActiveAccount
             , HttpServletRequest httpServletRequest) {
 
@@ -40,14 +38,12 @@ public class CustomerController {
         // we wrote the specification, let's use them
 
         Specification<Customer> specification = Specification
-                .where(firstName == null ? null : firstNameContains(firstName))
-                .and(lastName == null ? null : lastNameContains(lastName))
-                .and(birthDate == null ? null : birthDateContains(birthDate))
-                .and(cityOfBirth == null ? null : cityOfBirthContains(cityOfBirth))
-                .and(nicId == null ? null : nicIdContains(nicId))
-                .and(email == null ? null : emailContains(email))
-                .and(phoneNumber == null ? null : phoneNumberContains(phoneNumber))
-                .and(hasActiveAccount == null ? null : hasActiveAccountContains(hasActiveAccount));
+                .where(customerId==null?null:customerIdEqual(customerId))
+                .and(firstName == null ? null : firstNameEqual(firstName))
+                .and(lastName == null ? null : lastNameEqual(lastName))
+                .and(birthDate == null ? null : birthDateEqual(birthDate))
+                .and(nicId == null ? null : nicIdEqual(nicId))
+                .and(hasActiveAccount == null ? null : hasActiveAccountEqual(hasActiveAccount));
 
         return customerRepository.findAll(specification);
     }
@@ -55,14 +51,11 @@ public class CustomerController {
 
     public void registerCustomer(NewCusomerRecord newCusomerRecord) {
         Customer customer = new Customer();
+        customer.setCustomerId(newCusomerRecord.customerId());
         customer.setFirstName(newCusomerRecord.firstName());
         customer.setLastName(newCusomerRecord.lastName());
         customer.setBirthDate(Helpers.stringToLocalDate(newCusomerRecord.birthDate()));
-        customer.setCityOfBirth(newCusomerRecord.cityOfBirth());
         customer.setNicId(newCusomerRecord.nicId());
-        customer.setEmail(Helpers.checkAndReturnEmail(newCusomerRecord.email()));
-        customer.setPhoneNumber(newCusomerRecord.phoneNumber());
-        customer.setProfilePicture(newCusomerRecord.profilePicture());
         customer.setHasActiveAccount(false);
         try {
             customerRepository.save(customer);
@@ -81,10 +74,7 @@ public class CustomerController {
                     case "firstName" -> e.setFirstName((String) value);
                     case "lastName" -> e.setLastName((String) value);
                     case "birthDate" -> e.setBirthDate(Helpers.stringToLocalDate((String) value));
-                    case "cityOfBirth" -> e.setCityOfBirth((String) value);
                     case "nicId" -> e.setNicId((String) value);
-                    case "email" -> e.setEmail(Helpers.checkAndReturnEmail((String) value));
-                    case "phoneNumber" -> e.setPhoneNumber((Long) value);
                     case "hasActiveAccount" -> e.setHasActiveAccount((Boolean) value);
                     default -> {
                         System.out.println("put request bad format");

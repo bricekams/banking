@@ -9,6 +9,7 @@ This endpoint is the one to use when it comes to customers data.
 ::: details Body request format
 ```json
 {
+  "customerId": "7946b255-54aa-48a1-b174-05082201f3bd",
   "firstName": "John",
   "lastName": "Doe",
   "birthDate": "1972-10-08",

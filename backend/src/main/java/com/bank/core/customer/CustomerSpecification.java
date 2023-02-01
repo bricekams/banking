@@ -10,15 +10,19 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class CustomerSpecification {
-    public static Specification<Customer> firstNameContains(String value) {
+
+    public static Specification<Customer> customerIdEqual(String value) {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("customerId"), value));
+    }
+    public static Specification<Customer> firstNameEqual(String value) {
         return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("firstName"), value));
     }
 
-    public static Specification<Customer> lastNameContains(String value) {
+    public static Specification<Customer> lastNameEqual(String value) {
         return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("lastName"), value));
     }
 
-    public static Specification<Customer> birthDateContains(String value) {
+    public static Specification<Customer> birthDateEqual(String value) {
         LocalDate localDate;
         try {
             localDate = LocalDate.parse(value, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -28,23 +32,11 @@ public class CustomerSpecification {
         return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("birthDate"), localDate));
     }
 
-    public static Specification<Customer> cityOfBirthContains(String value) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("cityOfBirth"), value));
-    }
-
-    public static Specification<Customer> nicIdContains(String value) {
+    public static Specification<Customer> nicIdEqual(String value) {
         return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("nicId"), value));
     }
 
-    public static Specification<Customer> emailContains(String value) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("email"), value));
-    }
-
-    public static Specification<Customer> phoneNumberContains(Integer value) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("phoneNumber"), value));
-    }
-
-    public static Specification<Customer> hasActiveAccountContains(Boolean value) {
+    public static Specification<Customer> hasActiveAccountEqual(Boolean value) {
         return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("hasActiveAccount"), value));
     }
 

@@ -1,6 +1,7 @@
 package com.bank.core.customer.utils;
 
 public record NewCusomerRecord(
+        String customerId,
         String firstName,
         String lastName,
         String birthDate,

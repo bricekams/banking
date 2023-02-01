@@ -23,6 +23,7 @@ public class CustomerRoute {
 
     @GetMapping
     public List<Customer> getAllCustomers(
+            @RequestParam(required = false, value = "customerId") String customerId,
             @RequestParam(required = false, value = "firstName") String firstName,
             @RequestParam(required = false, value = "lastName") String lastName,
             @RequestParam(required = false, value = "birthDate") String birthDate,
@@ -33,7 +34,7 @@ public class CustomerRoute {
             @RequestParam(required = false, value = "hasActiveAccount") Boolean hasActiveAccount
             , HttpServletRequest httpServletRequest
     ) {
-        return new CustomerController(customerRepository).getAllCustomers(firstName, lastName, birthDate, cityOfBirth, nicId, email, phoneNumber, hasActiveAccount, httpServletRequest);
+        return new CustomerController(customerRepository).getAllCustomers(customerId,firstName, lastName, birthDate, nicId, hasActiveAccount, httpServletRequest);
     }
 
     @PostMapping

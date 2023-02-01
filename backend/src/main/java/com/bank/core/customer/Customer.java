@@ -10,36 +10,24 @@ import java.util.Objects;
 @Builder
 @Entity(name = "customers")
 public class Customer {
+
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String customerId;
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
-    private String cityOfBirth;
     @Column(unique = true)
     private String nicId; // national identity card number
-    @Column(unique = true)
-    private Long phoneNumber;
-    @Column(unique = true)
-    private String email;
-    private String profilePicture;
     private Boolean hasActiveAccount;
-    private String password;
     private String pin;
 
 
-    public Customer(String customerId, String firstName, String lastName, LocalDate birthDate, String cityOfBirth, String nicId, Long phoneNumber, String email, String profilePicture, Boolean hasActiveAccount) {
+    public Customer(String customerId, String firstName, String lastName, LocalDate birthDate,String nicId,Boolean hasActiveAccount) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
-        this.cityOfBirth = cityOfBirth;
         this.nicId = nicId;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.profilePicture = profilePicture;
         this.hasActiveAccount = hasActiveAccount;
     }
 
@@ -78,13 +66,7 @@ public class Customer {
         this.birthDate = birthDate;
     }
 
-    public String getCityOfBirth() {
-        return cityOfBirth;
-    }
 
-    public void setCityOfBirth(String cityOfBirth) {
-        this.cityOfBirth = cityOfBirth;
-    }
 
     public String getNicId() {
         return nicId;
@@ -94,29 +76,6 @@ public class Customer {
         this.nicId = nicId;
     }
 
-    public Long getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(Long phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
 
     public Boolean getHasActiveAccount() {
         return hasActiveAccount;
@@ -126,13 +85,6 @@ public class Customer {
         this.hasActiveAccount = hasActiveAccount;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getPin() {
         return pin;
@@ -152,7 +104,7 @@ public class Customer {
 
     @Override
     public int hashCode() {
-        return Objects.hash(customerId, firstName, lastName, birthDate, cityOfBirth, nicId, phoneNumber, email, profilePicture, hasActiveAccount, password, pin);
+        return Objects.hash(customerId, firstName, lastName, birthDate, nicId, hasActiveAccount, pin);
     }
 
     @Override
@@ -162,13 +114,8 @@ public class Customer {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthDate=" + birthDate +
-                ", cityOfBirth='" + cityOfBirth + '\'' +
                 ", nicId='" + nicId + '\'' +
-                ", phoneNumber=" + phoneNumber +
-                ", email='" + email + '\'' +
-                ", profilePicture='" + profilePicture + '\'' +
                 ", hasActiveAccount=" + hasActiveAccount +
-                ", password='" + password + '\'' +
                 ", pin='" + pin + '\'' +
                 '}';
     }
