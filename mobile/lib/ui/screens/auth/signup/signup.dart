@@ -4,15 +4,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mobile/ui/screens/auth/signup/components/pageviews/second_view.dart';
-import 'package:mobile/ui/screens/auth/signup/components/pageviews/third_view.dart';
-import 'package:mobile/ui/screens/auth/signup/components/pageviews/fourth_view.dart';
+import 'package:mobile/data/models/customer.dart';
+import 'package:mobile/ui/screens/auth/signup/components/pageviews/phone_number.dart';
+import 'package:mobile/ui/screens/auth/signup/components/pageviews/otp_verification.dart';
+import 'package:mobile/ui/screens/auth/signup/components/pageviews/email_and_password.dart';
+import 'package:mobile/ui/screens/auth/signup/components/pageviews/wait_for_email_verification.dart';
 
 import '../../../../utils/routes/route_const.dart';
-import 'components/pageviews/first_view.dart';
+import 'components/pageviews/name_and_birth.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  final int currentIndex;
+  const SignUpScreen({Key? key, required this.currentIndex}) : super(key: key);
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -20,16 +23,26 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final PageController _pageController = PageController();
-  int currentIndex = 0;
-  bool verifyingOTP = false;
-  bool otpAllFields = true;
-  bool submitted = false;
-
+  late int currentIndex = widget.currentIndex;
+  bool processing = false;
+  bool otpAllFields = true; // todo: implements it
+  FirebaseAuth auth = FirebaseAuth.instance;
+  String verificationId = "";
   late int phoneNumber = int.parse(phoneNumberController.text);
+
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController cityOfBirthController = TextEditingController();
+  final TextEditingController birthDateController = TextEditingController();
+
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
-
     /// Attach a listener which will update the state and refresh the page index
     _pageController.addListener(() {
       if (_pageController.page?.round() != currentIndex) {
@@ -43,6 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -116,11 +130,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: PageView(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _pageController,
-                  children: const [
-                    FirstView(),
-                    SecondView(),
-                    ThirdView(),
-                    FourthView()
+                  children: [
+                    NameAndBirth(
+                        firstNameController: firstNameController,
+                        lastNameController: lastNameController,
+                        birthDateController: birthDateController,
+                        cityOfBirthController: cityOfBirthController),
+                    EmailAndPassword(
+                      emailController: emailController,
+                      passwordController: passwordController,
+                    ),
+                    const WaitForEmailVerification(),
+                    const PhoneNumber(),
+                    const OTPVerification(),
                   ],
                 ),
               ),
@@ -136,25 +158,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           textTheme: ButtonTextTheme.primary,
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 15),
-                          onPressed: () {
-                            switch (currentIndex){
-                              case 3:
-                                _pageController.animateToPage(currentIndex - 2,
-                                    duration: const Duration(milliseconds: 400),
-                                    curve: Curves.easeIn);
-                                break;
-                              default:
-                                _pageController.animateToPage(currentIndex - 1,
-                                    duration: const Duration(milliseconds: 400),
-                                    curve: Curves.easeIn);
-                                break;
-                            }
-                          },
-                          child: Text(currentIndex == 2 ? "Cancel" : "Back"),
+                          onPressed: currentIndex == 2
+                              ? null
+                              : () {
+                                  switch (currentIndex) {
+                                    case 3:
+                                      _pageController.animateToPage(
+                                          currentIndex - 2,
+                                          duration:
+                                          const Duration(milliseconds: 400),
+                                          curve: Curves.easeIn);
+                                      break;
+                                    default:
+                                      toPreviousPage();
+                                      break;
+                                  }
+                                },
+                          child: Text(currentIndex == 4 ? "Cancel" : "Back"),
                         )
                       : TextButton(
                           onPressed: () {
-                            context.pushNamed(RouteConstants.login);
+                            context.pushReplacementNamed(RouteConstants.login);
                           },
                           child: Text(
                             "Already have account ?",
@@ -169,64 +193,73 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     textTheme: ButtonTextTheme.primary,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 15),
-                    onPressed: otpAllFields==false ? null : () {
-                      switch (currentIndex) {
-                        case 0:
-                          if (formKeyFirstView.currentState!.validate()) {
-                            _pageController.animateToPage(currentIndex + 1,
-                                duration: const Duration(milliseconds: 400),
-                                curve: Curves.easeIn);
-                          }
-                          break;
-                        case 1:
-                          if (formKeySecondView.currentState!.validate()) {
-                            phoneNumber = int.parse(phoneNumberController.text);
-                            FirebaseAuth auth = FirebaseAuth.instance;
-                            auth.verifyPhoneNumber(
-                              phoneNumber: "+237$phoneNumber",
-                              codeSent: (String verificationId, int? resendToken) async {
-                                log("code sent");
-                                _pageController.jumpToPage(2);
-                                do{
-
-                                } while (submitted==false);
-
-                                String otpSMS = "${otpInputController_1.text}${otpInputController_2.text}${otpInputController_3.text}${otpInputController_4.text}";
-                                PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: otpSMS);
-                                auth.signInWithCredential(credential).then((value){
-                                  verifyingOTP = false;
+                    onPressed: (otpAllFields == false || currentIndex == 2)
+                        ? null
+                        : () {
+                            switch (currentIndex) {
+                              case 0:
+                                if (formKeyNameAndBirth.currentState!.validate()) {
+                                  toNextPage();
+                                }
+                                break;
+                              case 1:
+                                if (formKeyEmailAndPassword.currentState!
+                                    .validate()) {
+                                  createUser(context);
+                                }
+                                break;
+                              case 2:
+                                break;
+                              case 3:
+                                if (formKeyPhoneNumber.currentState!
+                                    .validate()) {
+                                  phoneNumber =
+                                      int.parse(phoneNumberController.text);
                                   setState(() {
-
+                                    processing = true;
                                   });
-                                  if(value.user!=null){
-                                    _pageController.animateToPage(currentIndex + 1,
-                                        duration: const Duration(milliseconds: 400),
-                                        curve: Curves.easeIn);
-                                  }
-                                });
-                              },
-                              verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {  },
-                              verificationFailed: (FirebaseAuthException error) {
-                                log("${error.code}: ${error.message ?? ""}");
-                              },
-                              codeAutoRetrievalTimeout: (String verificationId) {  },
-                            );
-                          }
-                          break;
-                        case 2:
-                          if (formKeyThirdView.currentState!.validate()) {
-                            submitted = true;
-                            verifyingOTP = true;
-                            setState(() {
-
-                            });
-                          }
-                          break;
-                        default:
-                          break;
-                      }
-                    },
-                    child: verifyingOTP
+                                  auth.verifyPhoneNumber(
+                                    phoneNumber: "+237$phoneNumber",
+                                    codeSent: (String verificationId, int? resendToken) async {
+                                      this.verificationId = verificationId;
+                                      setState(() {
+                                        processing = false;
+                                      });
+                                      toNextPage();
+                                    },
+                                    verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {
+                                      auth.signInWithCredential(phoneAuthCredential).then((value){
+                                        setState(() {
+                                          processing = false;
+                                        });
+                                        context.pushReplacementNamed(RouteConstants.home);
+                                      });
+                                    },
+                                    verificationFailed: (FirebaseAuthException error) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(error.message??"no message"),
+                                            backgroundColor: Theme.of(context).colorScheme.error,
+                                          ),
+                                      );
+                                      setState(() {
+                                        processing = false;
+                                      });
+                                    },
+                                    codeAutoRetrievalTimeout: (String verificationId) { },
+                                  );
+                                }
+                                break;
+                              case 4:
+                                if (formKeyOTP.currentState!.validate()) {
+                                  updatePhoneNumber();
+                                }
+                                break;
+                              default:
+                                break;
+                            }
+                          },
+                    child: processing
                         ? SizedBox(
                             height: 14,
                             width: 14,
@@ -244,4 +277,123 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+
+  Future<void> waitForEmailVerification(BuildContext context) async {
+    int counter = 0;
+    while (FirebaseAuth.instance.currentUser!.emailVerified == false) {
+      log("verified: false");
+      if (counter > 90) {
+        auth.currentUser?.delete();
+        log("user deleted");
+        _pageController.jumpToPage(1);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            dismissDirection: DismissDirection.vertical,
+            content: const Text("We've waited too long, please try again"),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
+        );
+        return;
+      }
+      await Future.delayed(const Duration(seconds: 1), () {
+        FirebaseAuth.instance.currentUser!.reload();
+        counter++;
+      });
+    }
+    toNextPage();
+  }
+
+  void createUser(BuildContext context){
+    setState(() {
+      processing = true;
+    });
+    auth
+        .createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text)
+        .then((value) {
+      auth.currentUser
+          ?.sendEmailVerification()
+          .then((value) {
+        setState(() {
+          processing = false;
+        });
+        toNextPage();
+        waitForEmailVerification(context);
+      });
+    }).onError((error, stackTrace) {
+      setState(() {
+        processing = false;
+      });
+      if (error.runtimeType ==
+          FirebaseAuthException) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(
+          SnackBar(
+            content: Text(error
+                .toString()
+                .replaceRange(0, 14, '')
+                .split(']')[1]),
+            backgroundColor: Theme.of(context)
+                .colorScheme
+                .error,
+          ),
+        );
+      }
+    });
+  }
+  
+  void  updatePhoneNumber(){
+    String otpSMS = "${otpInputController_1.text}${otpInputController_2.text}${otpInputController_3.text}${otpInputController_4.text}${otpInputController_5.text}${otpInputController_6.text}";
+    setState(() {
+      processing = true;
+    });
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: otpSMS);
+    auth.currentUser?.updatePhoneNumber(credential).then((value){
+      setState(() {
+        processing = false;
+      });
+      context.pushReplacementNamed(RouteConstants.home);
+    }).onError((error, stackTrace){
+      setState(() {
+        processing = false;
+      });
+      if (error.runtimeType ==
+          FirebaseAuthException) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(
+          SnackBar(
+            content: Text(error
+                .toString()
+                .replaceRange(0, 14, '')
+                .split(']')[1]),
+            backgroundColor: Theme.of(context)
+                .colorScheme
+                .error,
+          ),
+        );
+        _pageController.jumpToPage(3);
+      }
+    });
+
+  }
+
+  void toNextPage(){
+    _pageController.animateToPage(
+        currentIndex + 1,
+        duration:
+        const Duration(milliseconds: 400),
+        curve: Curves.easeIn);
+  }
+
+  void toPreviousPage(){
+    _pageController.animateToPage(
+        currentIndex - 1,
+        duration:
+        const Duration(milliseconds: 400),
+        curve: Curves.easeIn);
+  }
+
 }
+
+

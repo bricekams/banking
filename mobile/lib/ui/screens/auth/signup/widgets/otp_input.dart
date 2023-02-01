@@ -20,7 +20,7 @@ class OTPInput extends StatelessWidget {
           keyboardType: TextInputType.number,
           onChanged: (str){
             if(str.isNotEmpty){
-              if(index!=4){
+              if(index!=6){
                 FocusScope.of(context).nextFocus();
               }else{
                 FocusScope.of(context).unfocus();

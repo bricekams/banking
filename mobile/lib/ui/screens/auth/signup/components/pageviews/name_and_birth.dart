@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/ui/widgets/custom_field.dart';
 
-GlobalKey<FormState> formKeyFirstView = GlobalKey<FormState>();
+GlobalKey<FormState> formKeyNameAndBirth = GlobalKey<FormState>();
 
-class FirstView extends StatelessWidget {
-  const FirstView({Key? key}) : super(key: key);
+class NameAndBirth extends StatelessWidget {
+
+  final TextEditingController firstNameController;
+  final TextEditingController lastNameController;
+  final TextEditingController cityOfBirthController;
+  final TextEditingController birthDateController;
+
+  const NameAndBirth({Key? key, required this.firstNameController, required this.lastNameController, required this.cityOfBirthController, required this.birthDateController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController firstNameController = TextEditingController();
-    TextEditingController lastNameController = TextEditingController();
-    TextEditingController cityOfBirthController = TextEditingController();
-    TextEditingController birthDateController = TextEditingController();
 
-    String date = "";
+
+    String date = birthDateController.text;
     String label = "Birth Date";
     return Form(
-      key: formKeyFirstView,
+      key: formKeyNameAndBirth,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -73,6 +76,7 @@ class FirstView extends StatelessWidget {
                   if(date.isEmpty){
                     return "field required";
                   }
+                  birthDateController.text = date;
                   return null;
                 },
                 suffixIcon: GestureDetector(

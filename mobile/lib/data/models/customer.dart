@@ -1,4 +1,4 @@
-class User {
+class Customer {
   String userId;
   String firstName;
   String lastName;
@@ -11,7 +11,7 @@ class User {
   String password;
   String pin;
 
-  User({
+  Customer({
     required this.userId,
     required this.firstName,
     required this.lastName,
@@ -25,8 +25,8 @@ class User {
     required this.pin,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory Customer.fromJson(Map<String, dynamic> json) {
+    return Customer(
       userId: json['userId'],
       firstName: json['firstName'],
       lastName: json['lastName'],

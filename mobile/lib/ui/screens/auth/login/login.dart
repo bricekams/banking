@@ -1,8 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/utils/routes/route_const.dart';
 import 'components/page_views/email_view.dart';
+
+final TextEditingController emailController = TextEditingController();
+final TextEditingController passwordController = TextEditingController();
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -10,7 +15,6 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -64,12 +68,16 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  const LoginWithEmailView(),
+                  LoginWithEmailView(
+                    emailController: emailController,
+                    passwordController: passwordController,
+                  ),
                   const SizedBox(height: 30),
                   RichText(
                     text: TextSpan(
                         style: GoogleFonts.roboto(
-                            fontWeight: FontWeight.w600, color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
                         ),
                         children: [
                           const TextSpan(
@@ -77,9 +85,10 @@ class LoginScreen extends StatelessWidget {
                           ),
                           TextSpan(
                               text: "register.",
-                              recognizer: TapGestureRecognizer()..onTap = () {
-                                context.pop();
-                              },
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  context.pushReplacementNamed(RouteConstants.signup);
+                                },
                               style: const TextStyle(
                                   color: Colors.cyan,
                                   fontWeight: FontWeight.bold))
@@ -93,7 +102,34 @@ class LoginScreen extends StatelessWidget {
                 textTheme: ButtonTextTheme.primary,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-                onPressed: () {},
+                onPressed: () {
+                  if (loginFormKey.currentState!.validate()) {
+                    FirebaseAuth auth = FirebaseAuth.instance;
+                    auth
+                        .signInWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text)
+                        .then((value) {
+                      if (value.user != null) {
+                        context.pushReplacementNamed(RouteConstants.home);
+
+                      }
+                    }).onError((error, stackTrace) {
+                      if (error.runtimeType == FirebaseAuthException) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(error
+                                .toString()
+                                .replaceRange(0, 14, '')
+                                .split(']')[1].split("or ")[0]),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.error,
+                          ),
+                        );
+                      }
+                    });
+                  }
+                },
                 child: const Text("Verify"),
               )
             ],

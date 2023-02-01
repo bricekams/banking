@@ -1,36 +1,53 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile/ui/widgets/custom_field.dart';
-import 'package:mobile/utils/routes/route_const.dart';
 
-GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
+GlobalKey<FormState> formKeyEmailAndPassword = GlobalKey<FormState>();
 
-class LoginWithEmailView extends StatelessWidget {
+
+class EmailAndPassword extends StatelessWidget {
+
   final TextEditingController emailController;
   final TextEditingController passwordController;
-  const LoginWithEmailView({Key? key, required this.emailController, required this.passwordController}) : super(key: key);
+
+  const EmailAndPassword({Key? key, required this.emailController, required this.passwordController}) : super(key: key);
+
+  static bool isValidEmail(String email) {
+    return RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+([\.][^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(email);
+  }
+
+  static bool isValidPassword(String password){
+    return RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$+!%?])[A-Za-z\d@#+$!%?]{8,}$').hasMatch(password);
+  }
 
   @override
   Widget build(BuildContext context) {
-    bool passwordHidden = true;
-    bool isValidEmail(String email) {
-      return RegExp(
-          r'^(([^<>()[\]\\.,;:\s@\"]+([\.][^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-          .hasMatch(email);
-    }
-    bool isValidPassword(String password){
-      return RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$+!%?])[A-Za-z\d@#+$!%?]{8,}$').hasMatch(password);
-    }
+    bool passwordHidden = false;
     return Form(
-      key: loginFormKey,
+      key: formKeyEmailAndPassword,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          const SizedBox(height: 10),
+          Padding(
+            padding:
+                EdgeInsets.only(right: MediaQuery.of(context).size.width / 7),
+            child: Text(
+              "Please, enter your email address and choose a password",
+              style: GoogleFonts.alata(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: Colors.grey.shade800,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
           CustomField(
+            textInputAction: TextInputAction.next,
+            label: const Text("Email"),
             validator: (txt){
               if(txt==null || !isValidEmail(txt)){
                 return "Invalid email";
@@ -38,13 +55,15 @@ class LoginWithEmailView extends StatelessWidget {
                 return null;
               }
             },
-            prefixIcon: const Icon(Icons.email),
-            label: const Text("Email"),
+            prefixIcon: const Icon(Icons.mail),
             controller: emailController,
           ),
           StatefulBuilder(
             builder: (context, setState) {
               return CustomField(
+                textInputAction: TextInputAction.done,
+                obscureText: passwordHidden,
+                prefixIcon: const Icon(Icons.lock),
                 validator: (txt){
                   if(txt==null || !isValidPassword(txt)) {
                     return "Password must have: \n"
@@ -57,8 +76,6 @@ class LoginWithEmailView extends StatelessWidget {
                     return null;
                   }
                 },
-                obscureText: passwordHidden,
-                prefixIcon: const Icon(Icons.lock),
                 suffixIcon: GestureDetector(
                   onTap: () {
                     setState(() {
@@ -72,23 +89,6 @@ class LoginWithEmailView extends StatelessWidget {
                 controller: passwordController,
               );
             },
-          ),
-          const SizedBox(height: 30),
-          RichText(
-            text: TextSpan(
-                style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-                children: [
-                  TextSpan(
-                      text: "I forgot my password.",
-                      recognizer: TapGestureRecognizer()..onTap = () {
-                        context.pushNamed(RouteConstants.recover);
-                      },
-                      style: const TextStyle(
-                          color: Colors.cyan, fontWeight: FontWeight.bold))
-                ]),
           )
         ],
       ),

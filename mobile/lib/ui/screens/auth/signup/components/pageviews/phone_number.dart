@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:mobile/ui/widgets/custom_field.dart';
 
 TextEditingController phoneNumberController = TextEditingController();
 
-GlobalKey<FormState> formKeySecondView = GlobalKey<FormState>();
-class SecondView extends StatelessWidget {
-  const SecondView({Key? key}) : super(key: key);
+GlobalKey<FormState> formKeyPhoneNumber = GlobalKey<FormState>();
+
+class PhoneNumber extends StatelessWidget {
+  const PhoneNumber({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
     return Form(
-      key: formKeySecondView,
+      key: formKeyPhoneNumber,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -22,7 +22,7 @@ class SecondView extends StatelessWidget {
             padding: EdgeInsets.only(
                 right: MediaQuery.of(context).size.width / 7),
             child: Text(
-              "Please enter your phone number, we will send you a 5 digits code to verify your identity.",
+              "Please enter your phone number, we will send you a 6 digits code to verify your identity.",
               style: GoogleFonts.alata(
                 fontWeight: FontWeight.bold,
                 fontSize: 15,

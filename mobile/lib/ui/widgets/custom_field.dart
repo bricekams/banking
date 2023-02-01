@@ -42,6 +42,7 @@ class CustomField extends StatelessWidget {
       initialValue: initialValue,
       textInputAction: textInputAction,
       onFieldSubmitted: onFieldSubmitted,
+      controller: controller,
       readOnly: readOnly ?? false,
       obscureText: obscureText??false,
       style: const TextStyle(

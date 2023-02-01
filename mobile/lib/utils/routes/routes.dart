@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/screens/auth/login/login.dart';
@@ -15,10 +18,13 @@ class AppRouter {
         pageBuilder: (context, state) =>
             const MaterialPage(child: HomeScreen()),
         redirect: (context, state) async {
-          bool authenticated = false;
-          if (authenticated == false) {
+          FirebaseAuth auth = FirebaseAuth.instance;
+          if (auth.currentUser==null) {
             return state.namedLocation(RouteConstants.signup);
           } else {
+            if(auth.currentUser!.phoneNumber==null || auth.currentUser!.phoneNumber!.isEmpty){
+              return state.namedLocation(RouteConstants.phoneNumber);
+            }
             return null;
           }
         },
@@ -33,7 +39,13 @@ class AppRouter {
         path: "/signup",
         name: RouteConstants.signup,
         pageBuilder: (context, state) =>
-            const MaterialPage(child: SignUpScreen()),
+            const MaterialPage(child: SignUpScreen(currentIndex: 0)),
+      ),
+      GoRoute(
+        path: "/signup/phoneNumber",
+        name: RouteConstants.phoneNumber,
+        pageBuilder: (context, state) =>
+        const MaterialPage(child: SignUpScreen(currentIndex: 3)),
       ),
       GoRoute(
         path: "/recover",
