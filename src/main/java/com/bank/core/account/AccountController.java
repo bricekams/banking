@@ -58,7 +58,7 @@ public class AccountController {
         customerRepository.findById(newAccountRecord.ownerId()).ifPresentOrElse(owner -> {
             account.setOwner(owner);
             account.setAccountName(newAccountRecord.accountName());
-            account.setAccountNumber(Helpers.generateFakeAccountNumber()); //todo: you'll definitely have to work on this
+            account.setAccountNumber(UUID.randomUUID()); //todo: you'll definitely have to work on this
             account.setCreatedOn(OffsetDateTime.now());
             account.setBalance(0F);
             this.accountRepository.save(account);

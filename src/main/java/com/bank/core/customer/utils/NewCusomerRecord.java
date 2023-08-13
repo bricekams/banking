@@ -1,7 +1,9 @@
 package com.bank.core.customer.utils;
 
+import java.util.UUID;
+
 public record NewCusomerRecord(
-        String customerId,
+        UUID customerId,
         String firstName,
         String lastName,
         String birthDate,

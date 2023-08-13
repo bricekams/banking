@@ -5,11 +5,12 @@ import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity(name = "accounts")
 public class Account {
     @Id
-    private Long accountNumber;
+    private UUID accountNumber;
     private String accountName;
     @ManyToOne
     @JoinColumn(name = "ownerId", referencedColumnName = "customerId", nullable = false)
@@ -20,7 +21,7 @@ public class Account {
     public Account() {
     }
 
-    public Account(Long number, Customer owner, OffsetDateTime createdOn, Float balance, String accountName) {
+    public Account(UUID number, Customer owner, OffsetDateTime createdOn, Float balance, String accountName) {
         this.accountNumber = number;
         this.accountName = accountName;
         this.owner = owner;
@@ -28,11 +29,11 @@ public class Account {
         this.balance = balance;
     }
 
-    public Long getAccountNumber() {
+    public UUID getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(Long accountNumber) {
+    public void setAccountNumber(UUID accountNumber) {
         this.accountNumber = accountNumber;
     }
 

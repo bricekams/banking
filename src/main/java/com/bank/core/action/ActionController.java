@@ -8,6 +8,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
+import java.util.UUID;
+
 import static com.bank.core.action.ActionSpecification.*;
 
 public class ActionController {
@@ -82,9 +84,9 @@ public class ActionController {
                 if (eventfulAccount.getBalance()<amount){
                     throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "NOT enough found");
                 }
-                long reference;
+                UUID reference;
                 try{
-                    reference = Long.parseLong(newActionRecord.receiverReference());
+                    reference = newActionRecord.receiverReference();
                 } catch (Exception e){
                     System.out.println(e.toString());
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Reference Bad Format");
@@ -97,7 +99,7 @@ public class ActionController {
                 });
                 action.setPurpose(newActionRecord.purpose());
                 action.setReceiverName(receiverAccount.getOwner().getFirstName()+" "+receiverAccount.getOwner().getLastName());
-                action.setReceiverReference(newActionRecord.receiverReference()); // account number
+                action.setReceiverReference(newActionRecord.receiverReference().toString()); // account number
                 actionRepository.save(action);
                 eventfulAccount.setBalance(eventfulAccount.getBalance()-amount);
                 receiverAccount.setBalance(receiverAccount.getBalance()+amount);
@@ -108,7 +110,7 @@ public class ActionController {
                     throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "NOT enough found");
                 }
                 action.setPurpose(newActionRecord.purpose());
-                action.setReceiverReference(newActionRecord.receiverReference()); // should be IBAN;
+                action.setReceiverReference(newActionRecord.receiverReference().toString()); // should be IBAN;
                 action.setReceiverName(newActionRecord.receiverName());
             }
             default -> {

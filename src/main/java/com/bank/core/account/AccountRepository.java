@@ -4,9 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
+import java.util.UUID;
 
-public interface AccountRepository extends JpaRepository<Account,Long>, JpaSpecificationExecutor<Account> {
-    Account findByAccountNumber(Long accountNumber);
+public interface AccountRepository extends JpaRepository<Account, UUID>, JpaSpecificationExecutor<Account> {
+    Account findByAccountNumber(UUID accountNumber);
 
     List<Account> findByOwner(Customer owner);
 }
