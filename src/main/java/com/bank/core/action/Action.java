@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Objects;
+import java.util.UUID;
 
 
 @Entity(name = "action")
@@ -12,7 +13,7 @@ public class Action {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String actionId;
-    private Long eventfulAccount;
+    private UUID eventfulAccount;
     private Float amount;
     @Enumerated(EnumType.STRING)
     private ActionType actionType;
@@ -20,7 +21,7 @@ public class Action {
     private String receiverReference;
     private String purpose;
 
-    public Action(String actionId, Long eventfulAccount, ActionType actionType, Float amount, String receiverName, String receiverReference, String purpose) {
+    public Action(String actionId, UUID eventfulAccount, ActionType actionType, Float amount, String receiverName, String receiverReference, String purpose) {
         this.actionId = actionId;
         this.eventfulAccount = eventfulAccount;
         this.actionType = actionType;
@@ -41,11 +42,11 @@ public class Action {
         this.actionId = actionId;
     }
 
-    public Long getEventfulAccount() {
+    public UUID getEventfulAccount() {
         return this.eventfulAccount;
     }
 
-    public void setEventfulAccount(Long eventfulAccount) {
+    public void setEventfulAccount(UUID eventfulAccount) {
         this.eventfulAccount = eventfulAccount;
     }
 

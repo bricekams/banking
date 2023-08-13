@@ -2,12 +2,14 @@ package com.bank.core.action.utils;
 
 import com.bank.core.account.Account;
 
+import java.util.UUID;
+
 public record NewActionRecord(
-        Long eventfulAccount,
+        UUID eventfulAccount,
         String actionType,
         Float amount,
         String receiverName,
-        String receiverReference,
+        UUID receiverReference,
         String purpose
 
 ) {

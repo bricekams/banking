@@ -7,12 +7,14 @@ import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDate;
 
 import java.util.Objects;
+import java.util.UUID;
+
 @Builder
 @Entity(name = "customers")
 public class Customer {
 
     @Id
-    private String customerId;
+    private UUID customerId;
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
@@ -22,7 +24,7 @@ public class Customer {
     private String pin;
 
 
-    public Customer(String customerId, String firstName, String lastName, LocalDate birthDate,String nicId,Boolean hasActiveAccount) {
+    public Customer(UUID customerId, String firstName, String lastName, LocalDate birthDate,String nicId,Boolean hasActiveAccount) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -34,11 +36,11 @@ public class Customer {
     public Customer() {
     }
 
-    public String getCustomerId() {
+    public UUID getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(String customerId) {
+    public void setCustomerId(UUID customerId) {
         this.customerId = customerId;
     }
 
